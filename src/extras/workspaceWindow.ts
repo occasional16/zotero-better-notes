@@ -5,12 +5,12 @@ window.addEventListener("DOMContentLoaded", () => {
   // Hook the note-editor's notify method to intercept before initEditor is called
   const workspace = document.querySelector("bn-workspace");
   if (workspace) {
-    const noteEditor = workspace.querySelector("note-editor");
+    const noteEditor = workspace.querySelector("note-editor") as EditorElement | null;
     if (noteEditor && !noteEditor._bnScrollHooked) {
       noteEditor._bnScrollHooked = true; // Prevent double hooking
 
       const originalNotify = noteEditor.notify;
-      noteEditor.notify = async function(event, type, ids, extraData) {
+      noteEditor.notify = async function(event: string, type: string, ids: number[], extraData: any) {
         // Check if this is a modify event for our item from another editor
         const item = getItem();
         if (event === "modify" && type === "item" && item && ids.includes(item.id)) {
@@ -101,7 +101,7 @@ function getEditorElement(): HTMLElement | null {
 function getIframe(): HTMLIFrameElement | null {
   const workspace = document.querySelector("bn-workspace");
   if (!workspace) return null;
-  const noteEditor = workspace.querySelector("note-editor");
+  const noteEditor = workspace.querySelector("note-editor") as EditorElement | null;
   if (!noteEditor) return null;
   return noteEditor.querySelector("iframe");
 }
